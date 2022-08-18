@@ -39,7 +39,7 @@ public class AuthenticationService {
         HttpEntity<UserCredentials> entity = createCredentialsEntity(credentials);
         boolean success = false;
         try {
-            restTemplate.exchange(baseUrl + "register", HttpMethod.POST, entity, Void.class);
+            restTemplate.exchange(baseUrl + "register", HttpMethod.POST, entity, UserCredentials.class);
             success = true;
         } catch (RestClientResponseException | ResourceAccessException e) {
             BasicLogger.log(e.getMessage());

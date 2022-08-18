@@ -4,6 +4,8 @@ import com.techelevator.tenmo.model.AuthenticatedUser;
 import com.techelevator.tenmo.model.UserCredentials;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 
 public class App {
 
@@ -58,6 +60,7 @@ public class App {
         if (currentUser == null) {
             consoleService.printErrorMessage();
         }
+        System.out.println(currentUser.getToken());
     }
 
     private void mainMenu() {
@@ -85,7 +88,8 @@ public class App {
     }
 
 	private void viewCurrentBalance() {
-		// TODO Auto-generated method stub
+//TODO call account service
+
 		
 	}
 
@@ -108,5 +112,7 @@ public class App {
 		// TODO Auto-generated method stub
 		
 	}
+
+
 
 }
