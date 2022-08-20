@@ -1,15 +1,17 @@
 package com.techelevator.tenmo.model;
 
+import java.math.BigDecimal;
+
 public class Account {
 
     private int accountId;
     private int userId;
-    private double balance;
+    private BigDecimal balance; // changing to big decimal to handle money exchange better
 
     public Account() {
     }
 
-    public Account(int accountId, int userId, double balance) {
+    public Account(int accountId, int userId, BigDecimal balance) {
         this.accountId = accountId;
         this.userId = userId;
         this.balance = balance;
@@ -31,11 +33,12 @@ public class Account {
         this.userId = userId;
     }
 
-    public double getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public void setBalance(double balance) {
+    public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
 }
+
