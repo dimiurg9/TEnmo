@@ -1,5 +1,6 @@
 package com.techelevator.tenmo.controller;
 
+import com.techelevator.tenmo.dao.UserDao;
 import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +17,14 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
-//@PreAuthorize("isAuthenticated()")
-@RequestMapping("/accounts") // after localhost:8080
-
-
+@PreAuthorize("isAuthenticated()")
 public class AccountController {
+
+    private UserDao userDao;
+
+    public AccountController(UserDao userDao) {
+        this.userDao = userDao;
+    }
 
     @Autowired
     private AccountService accountService;
@@ -30,12 +34,11 @@ public class AccountController {
         return accountService.getAccounts();
     }
 
-    @RequestMapping(value = "account/{id}", method = RequestMethod.GET) // calls the service with the users userId to get the balance of that account
-    public BigDecimal getBalance(@PathVariable int id){
-        return accountService.getBalance(id);
+    @RequestMapping(path = "/balance/{id}", method = RequestMethod.GET)
+    public double balance(@PathVariable Long id){
+
+        return userDao.findBallanceByUserID(id);
     }
-
-
 
 
     private HttpEntity<Void> makeAuthEntity(){ //  not used yet, maybe useful for authentication

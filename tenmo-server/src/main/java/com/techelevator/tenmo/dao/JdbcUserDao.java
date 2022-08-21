@@ -46,6 +46,19 @@ public class JdbcUserDao implements UserDao {
     }
 
     @Override
+    public double findBallanceByUserID(double userId) throws UsernameNotFoundException {
+//        System.out.println("received request in findAllbyID dao");
+        String sql = "select balance from account where user_id = ?;";
+        SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, userId);
+        if (rowSet.next()){
+            double balance = rowSet.getDouble("balance");
+            System.out.println(balance);
+            return balance;
+        }
+        throw new UsernameNotFoundException("User " + userId + " was not found.");
+    }
+
+    @Override
     public User findByUsername(String username) throws UsernameNotFoundException {
         String sql = "SELECT user_id, username, password_hash FROM tenmo_user WHERE username ILIKE ?;";
         SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, username);
