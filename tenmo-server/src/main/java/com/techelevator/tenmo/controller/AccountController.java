@@ -35,7 +35,7 @@ public class AccountController {
     }
 
     @RequestMapping(path = "/balance/{id}", method = RequestMethod.GET)
-    public double balance(@PathVariable Long id){
+    public double balance(@PathVariable double id){
 
         return userDao.findBallanceByUserID(id);
     }

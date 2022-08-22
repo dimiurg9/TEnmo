@@ -11,7 +11,7 @@ public class AccountService {
 
     RestTemplate restTemplate = new RestTemplate();
 
-    public double getBalance(String token, Long id){
+    public double getBalance(String token, double id){
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
         HttpEntity<Void> entity = new HttpEntity<>(headers);

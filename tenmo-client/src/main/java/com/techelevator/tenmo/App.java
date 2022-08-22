@@ -90,7 +90,7 @@ public class App {
     }
 
     private void viewCurrentBalance() {
-//TODO call account service
+    //TODO call account service
         double currentBalance = accountService.getBalance(currentUser.getToken(),currentUser.getUser().getId());
 
         System.out.println(currentBalance);
