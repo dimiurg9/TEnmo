@@ -10,9 +10,13 @@ public interface AccountDao {
 
     List<Account> findAll();
 
+    Account getAccountById(int accountId); // gets an account with users id
+
     BigDecimal findBalanceByUserID(Long userId) throws UsernameNotFoundException;
 
-    BigDecimal getBalance(int userId);
+    BigDecimal getBalance(long userId);
+
+    void update(Account account); //  used to update the account in the database to the new amount after transfer.
 
 
 }
