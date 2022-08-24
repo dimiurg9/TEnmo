@@ -16,7 +16,12 @@ public class App {
     private final AuthenticationService authenticationService = new AuthenticationService(API_BASE_URL);
     private final AccountService accountService = new AccountService();
 
-    private AuthenticatedUser currentUser;
+    //TODO: to test
+    public static AuthenticatedUser getCurrentUser() {
+        return currentUser;
+    }
+
+    private static AuthenticatedUser currentUser;
 
     public static void main(String[] args) {
         App app = new App();
