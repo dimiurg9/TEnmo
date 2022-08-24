@@ -35,16 +35,6 @@ public class AccountController {
     }
 
     @RequestMapping(path = "/balance/{id}", method = RequestMethod.GET)
-    public double balance(@PathVariable double id){
-
-        return userDao.findBallanceByUserID(id);
-    }
-
-
-    private HttpEntity<Void> makeAuthEntity(){ //  not used yet, maybe useful for authentication
-        HttpHeaders headers = new HttpHeaders();
-        //headers.setBearerAuth(currentUser.getToken());
-        return new HttpEntity<>(headers);
-    }
+    public BigDecimal balance(@PathVariable Long id){ return userDao.findBalanceByUserID(id);}
 
 }

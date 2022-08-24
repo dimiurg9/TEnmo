@@ -4,32 +4,22 @@ import com.techelevator.tenmo.model.Account;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 @Component
 public class JdbcAccountDao implements AccountDao {
 
     private JdbcTemplate jdbcTemplate;
 
-
-    //Replaced jdbcTemplate to DataSource
-
-//    public JdbcAccountDao(JdbcTemplate jdbcTemplate){
-//        this.jdbcTemplate = jdbcTemplate;
-//    }
-
-
     public JdbcAccountDao(DataSource dataSource) {
       this.jdbcTemplate = new JdbcTemplate(dataSource);
 }
-
-
 
     @Override
     public List<Account> findAll() {
@@ -42,6 +32,21 @@ public class JdbcAccountDao implements AccountDao {
             accounts.add(account);
         }
         return accounts;
+    }
+
+    @Override
+    public BigDecimal findBalanceByUserID(Long userId) throws UsernameNotFoundException {
+
+        String sql = "SELECT balance FROM account WHERE user_id = ?;";
+
+        BigDecimal balance = jdbcTemplate.queryForObject(sql, BigDecimal.class, userId);
+
+        if (balance != null){
+            return balance;
+        }else{
+            throw new UsernameNotFoundException("User " + userId + " was not found.");
+        }
+
     }
 
     @Override

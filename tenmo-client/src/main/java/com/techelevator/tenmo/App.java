@@ -8,6 +8,8 @@ import com.techelevator.tenmo.services.ConsoleService;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 
+import java.math.BigDecimal;
+
 public class App {
 
     private static final String API_BASE_URL = "http://localhost:8080/";
@@ -96,9 +98,15 @@ public class App {
 
     private void viewCurrentBalance() {
     //TODO call account service
-        double currentBalance = accountService.getBalance(currentUser.getToken(),currentUser.getUser().getId());
+        BigDecimal currentBalance = null;
 
-        System.out.println(currentBalance);
+        currentBalance = accountService.getBalance(currentUser.getToken(),currentUser.getUser().getId());
+
+        if (currentBalance != null){
+            System.out.println(currentBalance);
+        }else {
+            consoleService.printErrorMessage();
+        }
 
     }
 

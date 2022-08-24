@@ -2,13 +2,14 @@ package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.User;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface UserDao {
 
     List<User> findAll();
 
-    public double findBallanceByUserID(double userId);
+    public BigDecimal findBalanceByUserID(Long userId);
 
     User findByUsername(String username);
 
