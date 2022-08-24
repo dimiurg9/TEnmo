@@ -35,7 +35,7 @@ public class JdbcAccountDao implements AccountDao {
     }
 
     @Override
-    public BigDecimal findBalanceByUserID(Long userId) throws UsernameNotFoundException {
+    public BigDecimal findBalanceByUserID(long userId) throws UsernameNotFoundException {
 
         String sql = "SELECT balance FROM account WHERE user_id = ?;";
 

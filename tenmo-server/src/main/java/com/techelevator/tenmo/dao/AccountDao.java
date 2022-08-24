@@ -12,7 +12,7 @@ public interface AccountDao {
 
     Account getAccountById(int accountId); // gets an account with users id
 
-    BigDecimal findBalanceByUserID(Long userId) throws UsernameNotFoundException;
+    BigDecimal findBalanceByUserID(long userId) throws UsernameNotFoundException;
 
     BigDecimal getBalance(long userId);
 
