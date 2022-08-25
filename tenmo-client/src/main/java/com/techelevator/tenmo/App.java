@@ -1,10 +1,12 @@
 package com.techelevator.tenmo;
 
 import com.techelevator.tenmo.model.AuthenticatedUser;
+import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.UserCredentials;
 import com.techelevator.tenmo.services.AccountService;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
+import com.techelevator.tenmo.services.TransferService;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 
@@ -122,6 +124,22 @@ public class App {
 
 	private void sendBucks() {
 		// TODO Auto-generated method stub
+
+        Transfer transfer = new Transfer();
+        //        BigDecimal transferId = BigDecimal.valueOf(0.00);
+        transfer.setTransferTypeId(2);
+        transfer.setTransferStatusId(2);
+        transfer.setAccountFrom(Math.toIntExact(currentUser.getUser().getId()));
+        int toWhom = consoleService.promptForMenuSelection("Who to send (enter number): ");
+        transfer.setAccountTo(toWhom);
+        double amount = consoleService.promptForMenuSelection("How much to transfer: ");
+        transfer.setAmount(BigDecimal.valueOf(amount));
+
+        String token = currentUser.getToken();
+        TransferService.createTransfer(transfer, token);
+
+//        Transfer newCreatedTransfer = TransferService.createTransfer(transfer, token);
+//        System.out.println(newCreatedTransfer.getTransferId());
 		
 	}
 
