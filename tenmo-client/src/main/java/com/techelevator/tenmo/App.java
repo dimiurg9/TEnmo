@@ -19,6 +19,7 @@ public class App {
     private final ConsoleService consoleService = new ConsoleService();
     private final AuthenticationService authenticationService = new AuthenticationService(API_BASE_URL);
     private final AccountService accountService = new AccountService();
+    private final TransferService transferService = new TransferService();
 
     //TODO: to test
     public static AuthenticatedUser getCurrentUser() {
@@ -125,18 +126,19 @@ public class App {
 	private void sendBucks() {
 		// TODO Auto-generated method stub
 
-        Transfer transfer = new Transfer();
-        //        BigDecimal transferId = BigDecimal.valueOf(0.00);
-        transfer.setTransferTypeId(2);
-        transfer.setTransferStatusId(2);
-        transfer.setAccountFrom(Math.toIntExact(currentUser.getUser().getId()));
-        int toWhom = consoleService.promptForMenuSelection("Who to send (enter number): ");
-        transfer.setAccountTo(toWhom);
-        double amount = consoleService.promptForMenuSelection("How much to transfer: ");
-        transfer.setAmount(BigDecimal.valueOf(amount));
 
-        String token = currentUser.getToken();
-        TransferService.createTransfer(transfer, token);
+        //        BigDecimal transferId = BigDecimal.valueOf(0.00);
+//        transfer.setTransferTypeId(2);
+//        transfer.setTransferStatusId(2);
+//        transfer.setAccountFrom(Math.toIntExact(currentUser.getUser().getId()));
+        int toWhom = consoleService.promptForMenuSelection("Who to send (enter number): ");
+//        transfer.setAccountTo(toWhom);
+        double amount = consoleService.promptForMenuSelection("How much to transfer: ");
+//        transfer.setAmount(BigDecimal.valueOf(amount));
+        Transfer transfer = new Transfer(2, 1, 2001, toWhom, BigDecimal.valueOf(amount));
+        transferService.sendBucks(currentUser, transfer);
+
+
 
 //        Transfer newCreatedTransfer = TransferService.createTransfer(transfer, token);
 //        System.out.println(newCreatedTransfer.getTransferId());
