@@ -20,21 +20,31 @@ import java.util.List;
 @PreAuthorize("isAuthenticated()")
 public class AccountController {
 
-    private UserDao userDao;
-
-    public AccountController(UserDao userDao) {
-        this.userDao = userDao;
-    }
 
     @Autowired
     private AccountService accountService;
 
-    @RequestMapping(value = "", method = RequestMethod.GET) //  calls the service to get the list of all accounts
+    @RequestMapping(value = "/accounts", method = RequestMethod.GET) //  calls the service to get the list of all accounts
     public List<Account> getAccounts(){
         return accountService.getAccounts();
     }
 
+    @RequestMapping(value = "/account/accountid/{id}", method = RequestMethod.GET)
+    public Account getAccountByAccountId(@PathVariable int id){
+        return accountService.getAccountByAccountId(id);
+    }
+
     @RequestMapping(path = "/balance/{id}", method = RequestMethod.GET)
-    public BigDecimal balance(@PathVariable Long id){ return userDao.findBalanceByUserID(id);}
+    public BigDecimal balance(@PathVariable long id){ return accountService.findBalanceByUserID(id);} // changed 8/25 to use service instead of dao
+
+    @RequestMapping(path = "/account/user/{id}", method = RequestMethod.GET) // added 8/25
+    public Account getAccountByUserId(@PathVariable long id){
+        return accountService.getAccountById(id);
+    }
+
+    @RequestMapping(path = "/account/userid/{accountId}", method = RequestMethod.GET)
+    public long getUserIdByAccountId(@PathVariable int accountId){
+        return accountService.getUserIdByAccountId(accountId);
+    }
 
 }

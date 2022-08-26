@@ -34,6 +34,17 @@ public class JdbcUserDao implements UserDao {
     }
 
     @Override
+    public User getUserByByUserId(long id) {
+        User user = new User();
+        String sql = "SELECT user_id, username, password_hash FROM tenmo_user WHERE user_id = ?";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql,id);
+        while (results.next()){
+            user = mapRowToUser(results);
+        }
+        return user;
+    }
+
+    @Override
     public List<User> findAll() {
         List<User> users = new ArrayList<>();
         String sql = "SELECT user_id, username, password_hash FROM tenmo_user;";
@@ -45,8 +56,10 @@ public class JdbcUserDao implements UserDao {
         return users;
     }
 
+
+
     @Override
-    public BigDecimal findBalanceByUserID(Long userId) throws UsernameNotFoundException {
+    public BigDecimal findBalanceByUserID(long userId) throws UsernameNotFoundException {
 
         String sql = "SELECT balance FROM account WHERE user_id = ?;";
 

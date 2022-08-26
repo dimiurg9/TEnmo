@@ -37,25 +37,25 @@ public class JdbcTransferDao implements TransferDao{
         String sql = "INSERT INTO transfer(transfer_type_id, transfer_status_id, account_from, account_to, amount) VALUES (?,?,?,?,?)";
         jdbcTemplate.update(sql,
 
-                                                        transfer.getTransferTypeId(),
-                                                        transfer.getTransferStatusId(),
-                                                        transfer.getAccountFrom(),
-                                                        transfer.getAccountTo(),
-                                                        transfer.getAmount());
+                transfer.getTransferTypeId(),
+                transfer.getTransferStatusId(),
+                transfer.getAccountFrom(),
+                transfer.getAccountTo(),
+                transfer.getAmount());
     }
 
     @Override
     public List<Transfer> getTransfersByUser(long userId) {
         List<Transfer> transfers = new ArrayList<>();
         String sql = "SELECT transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount FROM transfer t " +
-                     "JOIN account a ON a.account_id = t.account_from OR a.account_id = t.account_to " +
-                     "WHERE a.user_id = ?";
+                "JOIN account a ON a.account_id = t.account_from OR a.account_id = t.account_to " +
+                "WHERE a.user_id = ?";
         SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, userId);
         while (rowSet.next()){
             Transfer transfer = mapRowToTransfer(rowSet);
             transfers.add(transfer);
         }
-           return transfers;
+        return transfers;
     }
 
     @Override
@@ -96,7 +96,7 @@ public class JdbcTransferDao implements TransferDao{
 
     private Transfer mapRowToTransfer(SqlRowSet rowSet) {
         Transfer transfer = new Transfer();
-//        transfer.setTransferId(rowSet.getInt("transfer_id"));
+        transfer.setTransferId(rowSet.getInt("transfer_id"));
         transfer.setTransferTypeId(rowSet.getInt("transfer_type_id"));
         transfer.setTransferStatusId(rowSet.getInt("transfer_status_id"));
         transfer.setAccountFrom(rowSet.getInt("account_from"));

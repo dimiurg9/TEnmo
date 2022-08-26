@@ -1,6 +1,8 @@
 package com.techelevator.tenmo.services;
 
 
+import com.techelevator.tenmo.model.AuthenticatedUser;
+import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.UserCredentials;
 
 import java.math.BigDecimal;
@@ -9,6 +11,9 @@ import java.util.Scanner;
 public class ConsoleService {
 
     private final Scanner scanner = new Scanner(System.in);
+    private final TransferService transferService = new TransferService();
+    private final AccountService accountService = new AccountService();
+    private final UserService userService = new UserService();
 
     public int promptForMenuSelection(String prompt) {
         int menuSelection;
@@ -86,6 +91,57 @@ public class ConsoleService {
 
     public void printErrorMessage() {
         System.out.println("An error occurred. Check the log for details.");
+    }
+
+    public void printTransferHistory(AuthenticatedUser currentUser, Transfer transfer){
+
+        String toOrFrom = "";
+        int accountFrom = transfer.getAccountFrom();
+        int accountTo = transfer.getAccountTo();
+        if (accountService.getAccountByAccountId(currentUser,accountFrom).getUserId() == currentUser.getUser().getId()) {
+            int accountFromUserId = accountService.getAccountByAccountId(currentUser, accountFrom).getUserId();
+            String userFromName = userService.getUserByUserId(currentUser, accountFromUserId).getUsername();
+            toOrFrom = "From: " + userFromName;
+        } else {
+            int accountToUserId = accountService.getAccountByAccountId(currentUser, accountTo).getUserId();
+            String userToName = userService.getUserByUserId(currentUser, accountToUserId).getUsername();
+            toOrFrom = "To:   " + userToName;
+        }
+
+        System.out.println(transfer.getTransferId()+ "     " + toOrFrom + "          " + "$ " + transfer.getAmount());
+
+    }
+
+    public void printTransferDetails(AuthenticatedUser currentUser, Transfer transfer) {
+
+        int id = transfer.getTransferId();
+        BigDecimal amount = transfer.getAmount();
+        int from = transfer.getAccountFrom();
+        int to = transfer.getAccountTo();
+        int transferTypeId = transfer.getTransferTypeId();
+        int transferStatusId = transfer.getTransferStatusId();
+
+
+
+        long fromUserId = accountService.getAccountByAccountId(currentUser, from).getUserId();
+        String fromUserName = userService.getUserByUserId(currentUser, fromUserId).getUsername();
+
+        long toUserId = accountService.getAccountByAccountId(currentUser, to).getUserId();
+        String toUserName = userService.getUserByUserId(currentUser, toUserId).getUsername();
+
+        String transferType = transferService.getTransferTypeById(currentUser,transferTypeId).getTransferTypeDesc();
+        String transferStatus = transferService.getTransferStatusById(currentUser,transferStatusId).getTransferStatusDesc();
+
+
+        System.out.println("-------------------------------");
+        System.out.println("Transfer Details");
+        System.out.println("-------------------------------");
+        System.out.println("Id: " + id);
+        System.out.println("From: " + fromUserName);
+        System.out.println("To: " + toUserName);
+        System.out.println("Type: " + transferType);
+        System.out.println("Status: " + transferStatus);
+        System.out.println("Amount: $" + amount);
     }
 
 }

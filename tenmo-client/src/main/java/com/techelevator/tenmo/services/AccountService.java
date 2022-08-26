@@ -1,5 +1,7 @@
 package com.techelevator.tenmo.services;
 
+import com.techelevator.tenmo.model.Account;
+import com.techelevator.tenmo.model.AuthenticatedUser;
 import com.techelevator.util.BasicLogger;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -31,6 +33,54 @@ public class AccountService {
             BasicLogger.log(e.getMessage());
         }
         return currentBalance;
+    }
+
+    public Account getAccountByID(AuthenticatedUser authenticatedUser, long id){ // created 8/25
+        String token = authenticatedUser.getToken();
+        Account account = null;
+        try{
+            ResponseEntity<Account> response = restTemplate.exchange(
+                    API_BASE_URL +"/account/user/"+id,
+                    HttpMethod.GET,
+                    makeEntityAuth(token),
+                    Account.class);
+            account = response.getBody();
+        }catch (RestClientResponseException | ResourceAccessException e){
+            BasicLogger.log(e.getMessage());
+        }
+
+        return account;
+
+    }
+
+    public Account getAccountByAccountId(AuthenticatedUser authenticatedUser, int accountId){
+        String token = authenticatedUser.getToken();
+        Account account = null;
+        try{
+            ResponseEntity<Account> response = restTemplate.exchange(
+                    API_BASE_URL +"/account/accountid/"+accountId,
+                    HttpMethod.GET,
+                    makeEntityAuth(token),
+                    Account.class);
+            account = response.getBody();
+        }catch (RestClientResponseException | ResourceAccessException e){
+            BasicLogger.log(e.getMessage());
+        }
+
+        return account;
+
+    }
+
+    public long getUserIdByAccountId(AuthenticatedUser authenticatedUser, int accountId) {
+        String token = authenticatedUser.getToken();
+        long userId = 0;
+        try {
+            ResponseEntity<Long> response = restTemplate.exchange(API_BASE_URL + "/account/userid/" + accountId, HttpMethod.GET, makeEntityAuth(token), Long.class);
+            userId = response.getBody();
+        } catch (RestClientResponseException | ResourceAccessException e) {
+            BasicLogger.log(e.getMessage());
+        }
+        return userId;
     }
 
     public HttpEntity<Void> makeEntityAuth(String token){

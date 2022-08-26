@@ -114,7 +114,23 @@ public class App {
     }
 
 	private void viewTransferHistory() {
-		// TODO Auto-generated method stub
+        Transfer[] transferHistory = transferService.getTransfersByUserId(currentUser);
+        System.out.println("-------------------------------");
+        System.out.println("Transfers");
+        System.out.println("ID     From/To          Amount");
+        System.out.println("-------------------------------");
+
+        for (Transfer transfer : transferHistory) {
+            consoleService.printTransferHistory(currentUser, transfer);
+        }
+
+        int choice = consoleService.promptForInt("Enter transfer ID to view details of transfer, or enter 0 to cancel ");
+
+//            if (transferService.transferIdIsValid(transferHistory, choice)) { // <----------------trying to figure out exception handling here
+        consoleService.printTransferDetails(currentUser, transferService.getTransfersByTransferId(currentUser, choice));
+//            } else {
+//                System.out.println("Please Try Again, Selection Not Valid");
+//            }
 		
 	}
 

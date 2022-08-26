@@ -23,6 +23,22 @@ public class AccountService {
         return accountDao.findAll();
     }
 
+    public Account getAccountByAccountId(int accountId){
+        return accountDao.getAccountById(accountId);
+    }
+
+    public Account getAccountById(long id){
+        return accountDao.getAccountByUserId(id);
+    }
+
+    public BigDecimal findBalanceByUserID(long userId){
+        return accountDao.findBalanceByUserID(userId);
+    }
+
+    public long getUserIdByAccountId(int accountId){
+        return accountDao.getUserIdByAccountId(accountId);
+    }
+
     public BigDecimal getBalance(int userId){ //  will get the balance in BigDecimal format by calling the dao
         return accountDao.getBalance(userId);
     }
