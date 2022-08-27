@@ -181,9 +181,6 @@ public class App {
         }
         else {transferService.sendBucks(currentUser, transfer);}
 
-
-
-		
 	}
 
 	private void requestBucks() {

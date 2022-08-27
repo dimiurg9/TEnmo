@@ -63,11 +63,11 @@ CREATE TABLE transfer (
 	CONSTRAINT CK_transfer_amount_gt_0 CHECK (amount > 0)
 );
 --created three users to avoid writing login tests
-INSERT INTO tenmo_user (user_id,username, password_hash) VALUES (1001, 'a', '2001a');
-INSERT INTO tenmo_user (user_id,username, password_hash) VALUES (1002, 'b', '2002a');
-INSERT INTO tenmo_user (user_id,username, password_hash) VALUES (1003, 'c', '2003a');
+INSERT INTO tenmo_user (user_id,username, password_hash) VALUES (1001, 'user1', 'hash_1');
+INSERT INTO tenmo_user (user_id,username, password_hash) VALUES (1002, 'user2', 'hash_2');
+INSERT INTO tenmo_user (user_id,username, password_hash) VALUES (1003, 'user3', 'hash_3');
 
-INSERT INTO account (account_id,user_id, balance) VALUES (2001, 1001, 1000);
+INSERT INTO account (account_id,user_id, balance) VALUES (2001, 1001, 16000);
 INSERT INTO account (account_id,user_id, balance) VALUES (2002, 1002, 2000);
 INSERT INTO account (account_id,user_id, balance) VALUES (2003, 1003, 3000);
 
