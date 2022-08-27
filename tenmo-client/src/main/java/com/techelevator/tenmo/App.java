@@ -72,7 +72,6 @@ public class App {
         if (currentUser == null) {
             consoleService.printErrorMessage();
         }
-        System.out.println(currentUser.getToken());
     }
 
     private void mainMenu() {
@@ -113,26 +112,29 @@ public class App {
 
     }
 
-	private void viewTransferHistory() {
-        Transfer[] transferHistory = transferService.getTransfersByUserId(currentUser);
+    private void viewTransferHistory() {
+        Transfer[] transferHistory = transferService.getTransfersByUserId(currentUser); // creates the array of transfers
         System.out.println("-------------------------------");
         System.out.println("Transfers");
         System.out.println("ID     From/To          Amount");
         System.out.println("-------------------------------");
 
-        for (Transfer transfer : transferHistory) {
-            consoleService.printTransferHistory(currentUser, transfer);
+        for (Transfer transfer : transferHistory) { //  loops through array
+            consoleService.printTransferHistory(currentUser, transfer); //  uses console service to print the transfers neatly
         }
 
-        int choice = consoleService.promptForInt("Enter transfer ID to view details of transfer, or enter 0 to cancel ");
+        int choice = consoleService.promptForInt("Enter transfer ID to view details of transfer (0 to Exit) "); // asks user if they want to see transaction
 
-//            if (transferService.transferIdIsValid(transferHistory, choice)) { // <----------------trying to figure out exception handling here
-        consoleService.printTransferDetails(currentUser, transferService.getTransfersByTransferId(currentUser, choice));
-//            } else {
-//                System.out.println("Please Try Again, Selection Not Valid");
-//            }
-		
-	}
+        if (transferService.transferIdIsValid(transferHistory, choice)) {  // if the transaction choice is valid
+            consoleService.printTransferDetails(currentUser, transferService.getTransfersByTransferId(currentUser, choice)); // prints the details
+        }else if(choice == 0 ){ // if choice equals zero, exits the process and kicks back to main menu
+            System.out.println();
+            System.out.println("Exiting...");
+        }else{
+            System.out.println();
+            System.out.println("Please Try Again, Selection Not Valid"); // tells them the choice wasn't valid and kicks back to menu
+        }
+    }
 
 	private void viewPendingRequests() {
         System.out.println("-------------------------------");

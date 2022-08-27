@@ -95,21 +95,22 @@ public class ConsoleService {
 
     public void printTransferHistory(AuthenticatedUser currentUser, Transfer transfer){
 
-        String toOrFrom = "";
+        String from = "";
+        String to = "";
         int accountFrom = transfer.getAccountFrom();
         int accountTo = transfer.getAccountTo();
-        if (accountService.getAccountByAccountId(currentUser,accountFrom).getUserId() == currentUser.getUser().getId()) {
-            int accountFromUserId = accountService.getAccountByAccountId(currentUser, accountFrom).getUserId();
-            String userFromName = userService.getUserByUserId(currentUser, accountFromUserId).getUsername();
-            toOrFrom = "From: " + userFromName;
-        } else {
-            int accountToUserId = accountService.getAccountByAccountId(currentUser, accountTo).getUserId();
-            String userToName = userService.getUserByUserId(currentUser, accountToUserId).getUsername();
-            toOrFrom = "To:   " + userToName;
-        }
+//        if (accountService.getAccountByAccountId(currentUser,accountFrom).getUserId() == currentUser.getUser().getId()) {
+        int accountFromUserId = accountService.getAccountByAccountId(currentUser, accountFrom).getUserId();
+        String userFromName = userService.getUserByUserId(currentUser, accountFromUserId).getUsername();
+        from = "From: " + userFromName;
+//        } else {
+        int accountToUserId = accountService.getAccountByAccountId(currentUser, accountTo).getUserId();
+        String userToName = userService.getUserByUserId(currentUser, accountToUserId).getUsername();
+        to = "To:   " + userToName;
+//        }
 
-        System.out.println(transfer.getTransferId()+ "     " + toOrFrom + "          " + "$ " + transfer.getAmount());
-
+        System.out.println(transfer.getTransferId()+ "     " + from + "          " + "$ " + transfer.getAmount());
+        System.out.println("         " + to   + "                                        ");
     }
 
     public void printTransferDetails(AuthenticatedUser currentUser, Transfer transfer) {
