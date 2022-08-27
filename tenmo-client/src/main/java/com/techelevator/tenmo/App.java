@@ -168,7 +168,7 @@ public class App {
         int toWhom = consoleService.promptForMenuSelection("Who to send (enter number): ");
         BigDecimal ballanceOfCurrentUser = accountService.getBalance(currentUser.getToken(),currentUser.getUser().getId());
         BigDecimal amount = BigDecimal.valueOf(consoleService.promptForMenuSelection("How much to transfer: "));
-        Transfer transfer = new Transfer(2, 1, currentUserAccountID, toWhom, amount);
+        Transfer transfer = new Transfer(2, 2, currentUserAccountID, toWhom, amount);
         if (currentUserAccountID == toWhom) {
             consoleService.printCannotSendToYourself();
             mainMenu();
@@ -186,9 +186,28 @@ public class App {
 	}
 
 	private void requestBucks() {
-		// TODO Auto-generated method stub
-		
+        int currentUserAccountID = AccountService.getAccountIDByUserId(currentUser.getToken(), currentUser.getUser().getId());
+        int toWhom = consoleService.promptForMenuSelection("Who to send (enter number): ");
+       BigDecimal ballanceOfCurrentUser = accountService.getBalance(currentUser.getToken(),currentUser.getUser().getId());
+        BigDecimal amount = BigDecimal.valueOf(consoleService.promptForMenuSelection("How much to transfer: "));
+        Transfer transfer = new Transfer(1, 1, currentUserAccountID, toWhom, amount);
+        if (currentUserAccountID == toWhom) {
+            consoleService.printCannotSendToYourself();
+            mainMenu();
+        }
+        if (ballanceOfCurrentUser.doubleValue() < amount.doubleValue()){
+            consoleService.printNotEnoughMoney();
+            mainMenu();
+        }
+        if (amount.doubleValue() <= 0){
+            consoleService.printAmountCannotBeZero();
+            mainMenu();
+        }
+        else {transferService.sendBucks(currentUser, transfer);}
+
 	}
+		
+
 
 
 
