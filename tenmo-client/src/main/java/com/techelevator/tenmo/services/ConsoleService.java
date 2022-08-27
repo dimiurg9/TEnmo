@@ -144,4 +144,23 @@ public class ConsoleService {
         System.out.println("Amount: $" + amount);
     }
 
+    public void approveOrDenyTransfer(AuthenticatedUser currentUser, Transfer transfer ){
+        System.out.println("1: Approve");
+        System.out.println("2: Reject");
+        System.out.println("0: Don't approve or reject");
+        System.out.println("---------");
+        int choice = promptForInt("Please choose an option: ");
+
+        if(choice == 1){
+            transfer.setTransferStatusId(1);
+            transferService.updateTransfer(currentUser, transfer);
+        }else if(choice == 2){
+            transfer.setTransferStatusId(3);
+            transferService.updateTransfer(currentUser, transfer);
+        }else{
+            System.out.println("Transfer has not been updated");
+        }
+
+    }
+
 }

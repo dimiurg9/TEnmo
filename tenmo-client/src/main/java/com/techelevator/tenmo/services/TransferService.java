@@ -80,6 +80,20 @@ public class TransferService {
         return transfers;
     }
 
+    public Transfer[] getPendingTransfersByUserId(AuthenticatedUser authenticatedUser){
+        Transfer[] pendingTransfers = null;
+        long userId =authenticatedUser.getUser().getId();
+        authToken = authenticatedUser.getToken();
+        try {
+            ResponseEntity<Transfer[]> response =
+                    restTemplate.exchange(baseUrl + "/user/pending/"+userId, HttpMethod.GET, makeAuthEntity(), Transfer[].class);
+            pendingTransfers = response.getBody();
+        }catch (RestClientResponseException | ResourceAccessException e) {
+            BasicLogger.log(e.getMessage());
+        }
+        return pendingTransfers;
+    }
+
     public TransferType getTransferTypeById(AuthenticatedUser authenticatedUser, int id){
         TransferType transferType = null;
         authToken = authenticatedUser.getToken();
@@ -106,22 +120,29 @@ public class TransferService {
         return transferStatus;
     }
 
-//    public boolean transferIdIsValid(Transfer [] transfers, int selection)  { //  added 8/26
-//
-//        boolean valid = false;
-//        try{
-//            for (Transfer transfer: transfers) {
-//                if (transfer.getTransferId() == selection){
-//                    valid = true;
-//                }else{
-//                    valid = false;
-//                }
-//            }
-//
-//        }catch (){
-//
-//        }
-//    }
+    public boolean transferIdIsValid(Transfer [] transfers, int selection) { //  added 8/26
+
+        boolean valid = false;
+        for (Transfer transfer : transfers) {
+            if (transfer.getTransferId() == selection) {
+                valid = true;
+            }
+        }
+        return valid;
+    }
+
+    public void updateTransfer(AuthenticatedUser authenticatedUser, Transfer transfer) {
+        authToken = authenticatedUser.getToken();
+        try {
+            restTemplate.exchange(baseUrl + "/update", HttpMethod.PUT, makeTransferEntity(transfer), Void.class);
+        } catch (RestClientResponseException e) {
+            if (e.getMessage().contains("You have insufficient funds for this transaction, or you tried to send money to yourself")) {
+                System.out.println("You have insufficient funds for this transaction");
+            } else {
+                System.out.println("The request could not be made, try again");
+            }
+        }
+    }
 
 
 

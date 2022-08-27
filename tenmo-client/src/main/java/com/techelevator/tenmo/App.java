@@ -135,9 +135,33 @@ public class App {
 	}
 
 	private void viewPendingRequests() {
-		// TODO Auto-generated method stub
-		
-	}
+        System.out.println("-------------------------------");
+        System.out.println("Transfers");
+        System.out.println("ID     From/To          Amount");
+        System.out.println("-------------------------------");
+        Transfer[] transfers = transferService.getPendingTransfersByUserId(currentUser);
+
+        for (Transfer transfer : transfers) { //  loops through array
+
+            consoleService.printTransferHistory(currentUser, transfer); //  uses console service to print the transfers neatly
+        }
+
+        int choice = consoleService.promptForInt("Enter transfer ID to approve or deny transfer (0 to Exit) "); // asks user for transfer id of request they would like to make choice on
+
+        if (transferService.transferIdIsValid(transfers, choice)) {  // if the transaction choice is valid
+            consoleService.approveOrDenyTransfer(currentUser, transferService.getTransfersByTransferId(currentUser, choice)); // prints the details
+        }else if(choice == 0 ){ // if choice equals zero, exits the process and kicks back to main menu
+            System.out.println();
+            System.out.println("Exiting...");
+        }else{
+            System.out.println();
+            System.out.println("Please Try Again, Selection Not Valid"); // tells them the choice wasn't valid and kicks back to menu
+        }
+
+
+
+
+    }
 
 	private void sendBucks() {
 		// TODO Auto-generated method stub
