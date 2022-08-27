@@ -158,30 +158,31 @@ public class App {
             System.out.println("Please Try Again, Selection Not Valid"); // tells them the choice wasn't valid and kicks back to menu
         }
 
-
-
-
     }
 
 	private void sendBucks() {
 		// TODO Auto-generated method stub
-
-
-        //        BigDecimal transferId = BigDecimal.valueOf(0.00);
-//        transfer.setTransferTypeId(2);
-//        transfer.setTransferStatusId(2);
-//        transfer.setAccountFrom(Math.toIntExact(currentUser.getUser().getId()));
+        int currentUserAccountID = AccountService.getAccountIDByUserId(currentUser.getToken(), currentUser.getUser().getId());
         int toWhom = consoleService.promptForMenuSelection("Who to send (enter number): ");
-//        transfer.setAccountTo(toWhom);
-        double amount = consoleService.promptForMenuSelection("How much to transfer: ");
-//        transfer.setAmount(BigDecimal.valueOf(amount));
-        Transfer transfer = new Transfer(2, 1, 2009, toWhom, BigDecimal.valueOf(amount));
-        transferService.sendBucks(currentUser, transfer);
+        BigDecimal ballanceOfCurrentUser = accountService.getBalance(currentUser.getToken(),currentUser.getUser().getId());
+        BigDecimal amount = BigDecimal.valueOf(consoleService.promptForMenuSelection("How much to transfer: "));
+        Transfer transfer = new Transfer(2, 1, currentUserAccountID, toWhom, amount);
+        if (currentUserAccountID == toWhom) {
+            consoleService.printCannotSendToYourself();
+            mainMenu();
+        }
+        if (ballanceOfCurrentUser.doubleValue() < amount.doubleValue()){
+            consoleService.printNotEnoughMoney();
+            mainMenu();
+        }
+        if (amount.doubleValue() <= 0){
+            consoleService.printAmountCannotBeZero();
+            mainMenu();
+        }
+        else {transferService.sendBucks(currentUser, transfer);}
 
 
 
-//        Transfer newCreatedTransfer = TransferService.createTransfer(transfer, token);
-//        System.out.println(newCreatedTransfer.getTransferId());
 		
 	}
 

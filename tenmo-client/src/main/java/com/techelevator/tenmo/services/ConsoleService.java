@@ -163,4 +163,22 @@ public class ConsoleService {
 
     }
 
+    public void printNotEnoughMoney(){
+        System.out.println("########################################");
+        System.out.println("   Not enough money");
+        System.out.println("#########################################");
+    }
+
+    public void printCannotSendToYourself(){
+        System.out.println("########################################");
+        System.out.println("   You can not send money to yourself");
+        System.out.println("#########################################");
+    }
+    public void printAmountCannotBeZero(){
+        System.out.println("########################################");
+        System.out.println("   Amount should be number more than zero");
+        System.out.println("#########################################");
+    }
+
+
 }

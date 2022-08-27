@@ -14,9 +14,9 @@ import org.springframework.web.client.RestTemplate;
 import java.math.BigDecimal;
 
 public class AccountService {
-    private final String API_BASE_URL = "http://localhost:8080";
+    private static final String API_BASE_URL = "http://localhost:8080";
 
-    RestTemplate restTemplate = new RestTemplate();
+    static RestTemplate restTemplate = new RestTemplate();
 
     public BigDecimal getBalance(String token, Long id){
         BigDecimal currentBalance = null;
@@ -83,7 +83,23 @@ public class AccountService {
         return userId;
     }
 
-    public HttpEntity<Void> makeEntityAuth(String token){
+    public static int getAccountIDByUserId(String token, long id){
+        Account account = null;
+        int accountId = 0;
+        try{
+            ResponseEntity<Account> response = restTemplate.exchange(
+                    API_BASE_URL +"/account/user/" +id,
+                    HttpMethod.GET,
+                    makeEntityAuth(token),
+                    Account.class);
+            return response.getBody().getAccountId();
+        }catch (ResourceAccessException e){
+            BasicLogger.log(e.getMessage());
+        }
+        return accountId;
+    }
+
+    public static HttpEntity<Void> makeEntityAuth(String token){
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
         HttpEntity<Void> entity = new HttpEntity<>(headers);
