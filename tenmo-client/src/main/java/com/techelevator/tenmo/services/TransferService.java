@@ -1,15 +1,15 @@
 package com.techelevator.tenmo.services;
 
 
-import com.techelevator.tenmo.model.AuthenticatedUser;
-import com.techelevator.tenmo.model.Transfer;
-import com.techelevator.tenmo.model.TransferStatus;
-import com.techelevator.tenmo.model.TransferType;
+import com.techelevator.tenmo.model.*;
 import com.techelevator.util.BasicLogger;
 import org.springframework.http.*;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 public class TransferService {
 
@@ -32,6 +32,8 @@ public class TransferService {
         }
         return transfer;
     }
+
+
 
     public boolean sendBucks(AuthenticatedUser authenticatedUser, Transfer transfer){
         boolean tOrF = false;

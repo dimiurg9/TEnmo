@@ -86,9 +86,9 @@ public class App {
             } else if (menuSelection == 3) {
                 viewPendingRequests();
             } else if (menuSelection == 4) {
-                sendBucks();
+                sendBucksByRequest(2, 2);
             } else if (menuSelection == 5) {
-                requestBucks();
+                sendBucksByRequest(1, 1);
             } else if (menuSelection == 0) {
                 continue;
             } else {
@@ -162,21 +162,34 @@ public class App {
 
     }
 
-	private void sendBucks() {
-		// TODO Auto-generated method stub
-
+    public void sendBucksByRequest(int transferType, int transferStatus){
         List<User> userList = userService.listUsers(currentUser);
+        BigDecimal amount = null;
 
         int currentUserAccountID = AccountService.getAccountIDByUserId(currentUser.getToken(), currentUser.getUser().getId());
-
-        int toWhom = consoleService.promptForMenuSelection("Who to send (enter number): ");
-        long selectedUserID = userList.get(toWhom - 1).getId();
-        int selectedUserAccountID = AccountService.getAccountIDByUserId(currentUser.getToken(),selectedUserID);
+        int toWhom = 0;
 
         BigDecimal ballanceOfCurrentUser = accountService.getBalance(currentUser.getToken(),currentUser.getUser().getId());
-        BigDecimal amount = BigDecimal.valueOf(consoleService.promptForMenuSelection("How much to transfer: "));
 
-        Transfer transfer = new Transfer(2, 2, currentUserAccountID,  Integer.parseInt(selectedUserAccountID+"") , amount);
+
+        Transfer transfer = null;
+        if (transferType == 1){
+
+            toWhom = consoleService.promptForMenuSelection("Who to request (enter number): ");
+            long selectedUserID = userList.get(toWhom - 1).getId();
+            amount = BigDecimal.valueOf(consoleService.promptForMenuSelection("How much to transfer: "));
+            int selectedUserAccountID = AccountService.getAccountIDByUserId(currentUser.getToken(),selectedUserID);
+            transfer = new Transfer(transferType, transferType, Integer.parseInt(selectedUserAccountID+"") ,currentUserAccountID,  amount);
+        }else if (transferType == 2){
+
+            toWhom = consoleService.promptForMenuSelection("Who to send (enter number): ");
+            amount = BigDecimal.valueOf(consoleService.promptForMenuSelection("How much to transfer: "));
+            long selectedUserID = userList.get(toWhom - 1).getId();
+            int selectedUserAccountID = AccountService.getAccountIDByUserId(currentUser.getToken(),selectedUserID);
+            transfer = new Transfer(transferType, transferType, currentUserAccountID,  Integer.parseInt(selectedUserAccountID+"") , amount);
+        }
+
+
 
         if (currentUserAccountID == toWhom) {
             consoleService.printCannotSendToYourself();
@@ -191,33 +204,6 @@ public class App {
             mainMenu();
         }
         else {transferService.sendBucks(currentUser, transfer);}
-
-	}
-
-	private void requestBucks() {
-        int currentUserAccountID = AccountService.getAccountIDByUserId(currentUser.getToken(), currentUser.getUser().getId());
-        int toWhom = consoleService.promptForMenuSelection("Who to send (enter number): ");
-       BigDecimal ballanceOfCurrentUser = accountService.getBalance(currentUser.getToken(),currentUser.getUser().getId());
-        BigDecimal amount = BigDecimal.valueOf(consoleService.promptForMenuSelection("How much to transfer: "));
-        Transfer transfer = new Transfer(1, 1, currentUserAccountID, toWhom, amount);
-        if (currentUserAccountID == toWhom) {
-            consoleService.printCannotSendToYourself();
-            mainMenu();
-        }
-        if (ballanceOfCurrentUser.doubleValue() < amount.doubleValue()){
-            consoleService.printNotEnoughMoney();
-            mainMenu();
-        }
-        if (amount.doubleValue() <= 0){
-            consoleService.printAmountCannotBeZero();
-            mainMenu();
-        }
-        else {transferService.sendBucks(currentUser, transfer);}
-
-	}
-		
-
-
-
+    }
 
 }

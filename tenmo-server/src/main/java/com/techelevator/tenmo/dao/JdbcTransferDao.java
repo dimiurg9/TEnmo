@@ -63,7 +63,7 @@ public class JdbcTransferDao implements TransferDao{
         List<Transfer> transfers = new ArrayList<>();
         String sql = "SELECT transfer_id, transfer_type_id, transfer.transfer_status_id, account_from, account_to, amount \n" +
                 "FROM transfer\n" +
-                "JOIN account ON transfer.account_to = account.account_id\n" +
+                "JOIN account ON transfer.account_from = account.account_id\n" +
                 "JOIN transfer_status ON transfer.transfer_status_id = transfer_status.transfer_status_id\n" +
                 "WHERE transfer_status.transfer_status_desc = 'Pending' AND account.user_id = ?; ";
         SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql,userId);

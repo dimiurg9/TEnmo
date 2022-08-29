@@ -153,7 +153,7 @@ public class ConsoleService {
         int choice = promptForInt("Please choose an option: ");
 
         if(choice == 1){
-            transfer.setTransferStatusId(1);
+            transfer.setTransferStatusId(2);
             transferService.updateTransfer(currentUser, transfer);
         }else if(choice == 2){
             transfer.setTransferStatusId(3);

@@ -46,6 +46,8 @@ public class TransferController {
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(value = "/createtransfer", method = RequestMethod.POST) //  used for sending transfers
     public void createTransfer(@RequestBody Transfer transfer) throws InsufficientFunds {
+//        int type = transfer.getTransferTypeId();
+
         transferService.createTransfer(transfer);
     }
 
