@@ -2,15 +2,14 @@ package com.techelevator.tenmo;
 
 import com.techelevator.tenmo.model.AuthenticatedUser;
 import com.techelevator.tenmo.model.Transfer;
+import com.techelevator.tenmo.model.User;
 import com.techelevator.tenmo.model.UserCredentials;
-import com.techelevator.tenmo.services.AccountService;
-import com.techelevator.tenmo.services.AuthenticationService;
-import com.techelevator.tenmo.services.ConsoleService;
-import com.techelevator.tenmo.services.TransferService;
+import com.techelevator.tenmo.services.*;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class App {
 
@@ -20,6 +19,7 @@ public class App {
     private final AuthenticationService authenticationService = new AuthenticationService(API_BASE_URL);
     private final AccountService accountService = new AccountService();
     private final TransferService transferService = new TransferService();
+    private final UserService userService = new UserService();
 
     //TODO: to test
     public static AuthenticatedUser getCurrentUser() {
@@ -164,11 +164,20 @@ public class App {
 
 	private void sendBucks() {
 		// TODO Auto-generated method stub
+
+        List<User> userList = userService.listUsers(currentUser);
+
         int currentUserAccountID = AccountService.getAccountIDByUserId(currentUser.getToken(), currentUser.getUser().getId());
+
         int toWhom = consoleService.promptForMenuSelection("Who to send (enter number): ");
+        long selectedUserID = userList.get(toWhom - 1).getId();
+        int selectedUserAccountID = AccountService.getAccountIDByUserId(currentUser.getToken(),selectedUserID);
+
         BigDecimal ballanceOfCurrentUser = accountService.getBalance(currentUser.getToken(),currentUser.getUser().getId());
         BigDecimal amount = BigDecimal.valueOf(consoleService.promptForMenuSelection("How much to transfer: "));
-        Transfer transfer = new Transfer(2, 2, currentUserAccountID, toWhom, amount);
+
+        Transfer transfer = new Transfer(2, 2, currentUserAccountID,  Integer.parseInt(selectedUserAccountID+"") , amount);
+
         if (currentUserAccountID == toWhom) {
             consoleService.printCannotSendToYourself();
             mainMenu();

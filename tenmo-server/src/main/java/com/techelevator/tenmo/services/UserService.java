@@ -6,6 +6,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
+
 @Service
 public class UserService {
     private RestTemplate restTemplate = new RestTemplate();
@@ -20,4 +22,7 @@ public class UserService {
     public User getUserByUserId(long id){
         return userDao.getUserByByUserId(id);
     }
+
+    public List<User> getAllUsers(){return userDao.findAll();}
+
 }
