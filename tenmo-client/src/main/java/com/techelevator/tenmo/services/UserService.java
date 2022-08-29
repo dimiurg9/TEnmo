@@ -41,7 +41,7 @@ public class UserService {
         List<User> userList = null;
 
         try{
-            ResponseEntity<List<User>> response = restTemplate.exchange(baseUrl + "/users",
+            ResponseEntity<List<User>> response = restTemplate.exchange(baseUrl + "/users/"+currentUser.getUser().getId(),
                     HttpMethod.GET,
                     makeAuthEntity(),
                     new ParameterizedTypeReference<List<User>>() {});

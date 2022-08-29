@@ -23,8 +23,8 @@ public class UserController {
         return userService.getUserByUserId(id);
     }
 
-    @RequestMapping(value = "/users", method = RequestMethod.GET)
-    public List<User> listAllUsers(){return userService.getAllUsers();}
+    @RequestMapping(value = "/users/{id}", method = RequestMethod.GET)
+    public List<User> listAllUsers(@PathVariable int id){return userService.getAllUsers(id);}
 
 
 }

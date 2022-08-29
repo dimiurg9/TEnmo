@@ -21,7 +21,6 @@ public class App {
     private final TransferService transferService = new TransferService();
     private final UserService userService = new UserService();
 
-    //TODO: to test
     public static AuthenticatedUser getCurrentUser() {
         return currentUser;
     }
@@ -58,6 +57,7 @@ public class App {
 
     private void handleRegister() {
         System.out.println("Please register a new user account");
+
         UserCredentials credentials = consoleService.promptForCredentials();
         if (authenticationService.register(credentials)) {
             System.out.println("Registration successful. You can now login.");
@@ -69,6 +69,7 @@ public class App {
     private void handleLogin() {
         UserCredentials credentials = consoleService.promptForCredentials();
         currentUser = authenticationService.login(credentials);
+
         if (currentUser == null) {
             consoleService.printErrorMessage();
         }
@@ -105,7 +106,7 @@ public class App {
         currentBalance = accountService.getBalance(currentUser.getToken(),currentUser.getUser().getId());
 
         if (currentBalance != null){
-            System.out.println(currentBalance);
+            System.out.println("Your current account balance is: $" +currentBalance);
         }else {
             consoleService.printErrorMessage();
         }
@@ -114,16 +115,17 @@ public class App {
 
     private void viewTransferHistory() {
         Transfer[] transferHistory = transferService.getTransfersByUserId(currentUser); // creates the array of transfers
-        System.out.println("-------------------------------");
-        System.out.println("Transfers");
-        System.out.println("ID     From/To          Amount");
-        System.out.println("-------------------------------");
+
 
         for (Transfer transfer : transferHistory) { //  loops through array
+            System.out.println("-------------------------------");
+            System.out.println("Transfers");
+            System.out.println("ID     From/To          Amount");
+            System.out.println("-------------------------------");
             consoleService.printTransferHistory(currentUser, transfer); //  uses console service to print the transfers neatly
         }
 
-        int choice = consoleService.promptForInt("Enter transfer ID to view details of transfer (0 to Exit) "); // asks user if they want to see transaction
+        int choice = consoleService.promptForInt("\nEnter transfer ID to view details of transfer (0 to Exit) "); // asks user if they want to see transaction
 
         if (transferService.transferIdIsValid(transferHistory, choice)) {  // if the transaction choice is valid
             consoleService.printTransferDetails(currentUser, transferService.getTransfersByTransferId(currentUser, choice)); // prints the details
@@ -171,39 +173,60 @@ public class App {
 
         BigDecimal ballanceOfCurrentUser = accountService.getBalance(currentUser.getToken(),currentUser.getUser().getId());
 
-
-        Transfer transfer = null;
-        if (transferType == 1){
-
-            toWhom = consoleService.promptForMenuSelection("Who to request (enter number): ");
-            long selectedUserID = userList.get(toWhom - 1).getId();
-            amount = BigDecimal.valueOf(consoleService.promptForMenuSelection("How much to transfer: "));
-            int selectedUserAccountID = AccountService.getAccountIDByUserId(currentUser.getToken(),selectedUserID);
-            transfer = new Transfer(transferType, transferType, Integer.parseInt(selectedUserAccountID+"") ,currentUserAccountID,  amount);
-        }else if (transferType == 2){
-
-            toWhom = consoleService.promptForMenuSelection("Who to send (enter number): ");
-            amount = BigDecimal.valueOf(consoleService.promptForMenuSelection("How much to transfer: "));
-            long selectedUserID = userList.get(toWhom - 1).getId();
-            int selectedUserAccountID = AccountService.getAccountIDByUserId(currentUser.getToken(),selectedUserID);
-            transfer = new Transfer(transferType, transferType, currentUserAccountID,  Integer.parseInt(selectedUserAccountID+"") , amount);
+        System.out.println("-------------------------------------------\n" +
+                "Users\n" +
+                "ID          Name\n" +
+                "-------------------------------------------");
+        for (User user: userList){
+            System.out.println(String.format("%s         %s",user.getId(), user.getUsername()));
         }
 
+        System.out.println("---------\n");
 
+        long selectedUserID = 0;
 
-        if (currentUserAccountID == toWhom) {
-            consoleService.printCannotSendToYourself();
-            mainMenu();
+        try{
+            Transfer transfer = null;
+            if (transferType == 1){
+
+                selectedUserID = consoleService.promptForMenuSelection("Enter ID of user you are requesting from (0 to cancel): ");
+                if(selectedUserID != 0){
+                    amount = BigDecimal.valueOf(consoleService.promptForMenuSelection("How much to transfer: "));
+                    int selectedUserAccountID = AccountService.getAccountIDByUserId(currentUser.getToken(),selectedUserID);
+                    transfer = new Transfer(transferType, transferType, Integer.parseInt(selectedUserAccountID+"") ,currentUserAccountID,  amount);
+                }
+
+            }else if (transferType == 2){
+
+                selectedUserID = consoleService.promptForMenuSelection("Enter ID of user you are sending to (0 to cancel): ");
+                if(selectedUserID != 0) {
+                    amount = BigDecimal.valueOf(consoleService.promptForMenuSelection("How much to transfer: "));
+                    int selectedUserAccountID = AccountService.getAccountIDByUserId(currentUser.getToken(), selectedUserID);
+                    transfer = new Transfer(transferType, transferType, currentUserAccountID, Integer.parseInt(selectedUserAccountID + ""), amount);
+                }
+            }
+
+            if (currentUserAccountID == toWhom) {
+                consoleService.printCannotSendToYourself();
+                mainMenu();
+            }
+            if (ballanceOfCurrentUser.doubleValue() < amount.doubleValue()){
+                consoleService.printNotEnoughMoney();
+                mainMenu();
+            }
+            if (amount.doubleValue() <= 0){
+                consoleService.printAmountCannotBeZero();
+                mainMenu();
+            }
+            else {
+                    transferService.sendBucks(currentUser, transfer);
+            }
+        }catch (IndexOutOfBoundsException e){
+            System.out.println("An error has occurred");
+        }catch (Exception e){
+            System.out.println("Exiting...");
         }
-        if (ballanceOfCurrentUser.doubleValue() < amount.doubleValue()){
-            consoleService.printNotEnoughMoney();
-            mainMenu();
-        }
-        if (amount.doubleValue() <= 0){
-            consoleService.printAmountCannotBeZero();
-            mainMenu();
-        }
-        else {transferService.sendBucks(currentUser, transfer);}
+
     }
 
 }

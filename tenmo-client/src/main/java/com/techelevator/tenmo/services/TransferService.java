@@ -44,6 +44,7 @@ public class TransferService {
         try{
             restTemplate.exchange(baseUrl +"/createtransfer",HttpMethod.POST, entity, Transfer.class);
             tOrF = true;
+            System.out.println("Transaction was successful.");
             return tOrF;
         }catch (RestClientResponseException e ){
             if(e.getMessage().contains("You have insufficient funds for this transaction, or you tried to send money to yourself")){

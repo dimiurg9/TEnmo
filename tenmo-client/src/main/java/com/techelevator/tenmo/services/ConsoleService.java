@@ -3,6 +3,7 @@ package com.techelevator.tenmo.services;
 
 import com.techelevator.tenmo.model.AuthenticatedUser;
 import com.techelevator.tenmo.model.Transfer;
+import com.techelevator.tenmo.model.User;
 import com.techelevator.tenmo.model.UserCredentials;
 
 import java.math.BigDecimal;
@@ -95,22 +96,25 @@ public class ConsoleService {
 
     public void printTransferHistory(AuthenticatedUser currentUser, Transfer transfer){
 
-        String from = "";
-        String to = "";
         int accountFrom = transfer.getAccountFrom();
-        int accountTo = transfer.getAccountTo();
-//        if (accountService.getAccountByAccountId(currentUser,accountFrom).getUserId() == currentUser.getUser().getId()) {
         int accountFromUserId = accountService.getAccountByAccountId(currentUser, accountFrom).getUserId();
-        String userFromName = userService.getUserByUserId(currentUser, accountFromUserId).getUsername();
-        from = "From: " + userFromName;
-//        } else {
-        int accountToUserId = accountService.getAccountByAccountId(currentUser, accountTo).getUserId();
-        String userToName = userService.getUserByUserId(currentUser, accountToUserId).getUsername();
-        to = "To:   " + userToName;
-//        }
 
-        System.out.println(transfer.getTransferId()+ "     " + from + "          " + "$ " + transfer.getAmount());
-        System.out.println("         " + to   + "                                        ");
+        int accountTo = transfer.getAccountTo();
+        int accountToUserId = accountService.getAccountByAccountId(currentUser, accountTo).getUserId();
+
+
+        User userFrom = userService.getUserByUserId(currentUser, accountFromUserId);
+        String userFromName = userFrom.getUsername();
+        long userFromId = userFrom.getId();
+
+        User userTo = userService.getUserByUserId(currentUser, accountToUserId);
+        String userToName = userTo.getUsername();
+        long userToId = userTo.getId();
+
+
+        System.out.println(String.format("%s          From: %s          \n" +
+                "              To:    %s           $  %s",transfer.getTransferId(),userFromName,userToName, transfer.getAmount()));
+
     }
 
     public void printTransferDetails(AuthenticatedUser currentUser, Transfer transfer) {
