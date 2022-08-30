@@ -29,8 +29,16 @@ public class ConsoleService {
 
     public void printGreeting() {
         System.out.println("*********************");
-        System.out.println("* Welcome to TEnmo! *");
+        System.out.println("* Welcome to  *");
+        System.out.println("" +
+                "  ____________                    \n" +
+                " /_  __/ ____/___  ____ ___  ____ \n" +
+                "  / / / __/ / __ \\/ __ `__ \\/ __ \\\n" +
+                " / / / /___/ / / / / / / / / /_/ /\n" +
+                "/_/ /_____/_/ /_/_/ /_/ /_/\\____/ \n" +
+                "                                  ");
         System.out.println("*********************");
+
     }
 
     public void printLoginMenu() {
@@ -112,8 +120,8 @@ public class ConsoleService {
         long userToId = userTo.getId();
 
 
-        System.out.println(String.format("%s          From: %s          \n" +
-                "              To:    %s           $  %s",transfer.getTransferId(),userFromName,userToName, transfer.getAmount()));
+        System.out.println(String.format("%s          From: %s           \n" +
+                "              To:   %s           $  %s",transfer.getTransferId(),userFromName,userToName, transfer.getAmount()));
 
     }
 
